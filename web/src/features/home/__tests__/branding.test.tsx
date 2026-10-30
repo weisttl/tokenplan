@@ -81,7 +81,7 @@ it('keeps the high-resolution logo throughout the initial homepage request', asy
   ).toHaveAttribute('src', '/gtht-logo.svg')
 })
 
-it('shows the internal development workspace with the official brand and required attribution', async () => {
+it('shows the internal workspace without a footer and links to the about page for attribution', async () => {
   renderHome()
   expect(
     await screen.findByRole('heading', {
@@ -94,11 +94,10 @@ it('shows the internal development workspace with the official brand and require
     'src',
     '/gtht-logo.svg'
   )
-  expect(
-    screen.getByRole('link', {
-      name: 'Frontend design and development by New API contributors.',
-    })
-  ).toHaveAttribute('href', 'https://github.com/QuantumNous/new-api')
+  expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument()
+  for (const aboutLink of screen.getAllByRole('link', { name: 'About' })) {
+    expect(aboutLink).toHaveAttribute('href', '/about')
+  }
   expect(
     screen.getByRole('button', { name: 'Sign in to workspace' })
   ).toHaveAttribute('href', '/sign-in?redirect=%2Fdashboard')

@@ -33,7 +33,6 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 
 import { PublicLayout } from '@/components/layout'
-import { Footer } from '@/components/layout/components/footer'
 import { Button } from '@/components/ui/button'
 import { useStatus } from '@/hooks/use-status'
 
@@ -78,6 +77,7 @@ export function InternalHome(props: { isAuthenticated: boolean }) {
       href: '/keys',
       requiresAuth: !props.isAuthenticated,
     },
+    { title: t('About'), href: '/about' },
   ]
   const docsUrl =
     typeof status?.docs_link === 'string' ? status.docs_link.trim() : ''
@@ -273,7 +273,6 @@ export function InternalHome(props: { isAuthenticated: boolean }) {
           </div>
         </div>
       </main>
-      <Footer compact />
     </PublicLayout>
   )
 }
