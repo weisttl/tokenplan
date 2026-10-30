@@ -21,8 +21,23 @@ For commercial licensing, please contact support@quantumnous.com
  */
 
 // System Configuration Defaults
-export const DEFAULT_SYSTEM_NAME = 'BestLoongAI'
-export const DEFAULT_LOGO = '/bestloongai-logo.svg'
+export const DEFAULT_SYSTEM_NAME = '国泰海通 · AI 开发平台'
+export const DEFAULT_LOGO = '/gtht-favicon.ico'
+
+export function resolveSystemBrand(name?: unknown, logo?: unknown) {
+  return {
+    systemName:
+      typeof name === 'string' && name.trim() && name !== 'BestLoongAI'
+        ? name
+        : DEFAULT_SYSTEM_NAME,
+    logo:
+      typeof logo === 'string' &&
+      logo.trim() &&
+      logo !== '/bestloongai-logo.svg'
+        ? logo
+        : DEFAULT_LOGO,
+  }
+}
 
 // LocalStorage Keys
 export const STORAGE_KEYS = {

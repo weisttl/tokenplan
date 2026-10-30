@@ -18,12 +18,13 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import type { SVGProps } from 'react'
 
+import { DEFAULT_LOGO, DEFAULT_SYSTEM_NAME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 
 export function Logo({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
-      id='bestloongai-logo'
+      id='gtht-logo'
       viewBox='0 0 24 24'
       xmlns='http://www.w3.org/2000/svg'
       height='24'
@@ -36,8 +37,8 @@ export function Logo({ className, ...props }: SVGProps<SVGSVGElement>) {
       className={cn('size-6', className)}
       {...props}
     >
-      <title>BestLoongAI</title>
-      <image href='/bestloongai-logo.svg' width='24' height='24' />
+      <title>{DEFAULT_SYSTEM_NAME}</title>
+      <image href={DEFAULT_LOGO} width='24' height='24' />
     </svg>
   )
 }

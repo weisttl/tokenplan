@@ -5,114 +5,154 @@ import {
   createRouter,
   RouterProvider,
 } from '@tanstack/react-router'
-import { render, screen } from '@testing-library/react'
-import { afterEach, expect, it } from 'vitest'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { afterEach, expect, it, vi } from 'vitest'
 
-import { Footer } from '@/components/layout/components/footer'
+import { ThemeProvider } from '@/context/theme-provider'
+import { DEFAULT_SYSTEM_NAME, resolveSystemBrand } from '@/lib/constants'
 import { STATUS_QUERY_KEY } from '@/lib/status-query'
 
-import { Hero } from '../components/sections/hero'
-import { Stats } from '../components/sections/stats'
+import { InternalHome } from '../components/internal-home'
 
 const clients: QueryClient[] = []
-
 afterEach(() => {
   for (const client of clients) client.clear()
   clients.length = 0
 })
 
-function renderHero(
-  isAuthenticated: boolean,
-  docsLink = 'https://docs.example.com'
+function renderHome(
+  isAuthenticated = false,
+  serverAddress = 'https://gateway.example.com/team/'
 ) {
   const client = new QueryClient({
     defaultOptions: { queries: { staleTime: Infinity } },
   })
   clients.push(client)
   client.setQueryData(STATUS_QUERY_KEY, {
-    docs_link: docsLink,
+    server_address: serverAddress,
+    docs_link: '',
   })
-  const route = createRootRoute({
-    component: () => (
-      <>
-        <Hero isAuthenticated={isAuthenticated} />
-        <Footer />
-      </>
-    ),
+  const root = createRootRoute({
+    component: () => <InternalHome isAuthenticated={isAuthenticated} />,
   })
   const router = createRouter({
-    routeTree: route,
+    routeTree: root,
     history: createMemoryHistory({ initialEntries: ['/'] }),
   })
   return render(
     <QueryClientProvider client={client}>
-      <RouterProvider router={router} />
+      <ThemeProvider>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </QueryClientProvider>
   )
 }
 
-it('uses BestLoongAI branding and preserves the required legal notice and original project link', async () => {
-  renderHero(false)
-
-  expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
-    'BestLoongAI'
-  )
-  for (const logo of screen.getAllByRole('img', { name: 'BestLoongAI' })) {
-    expect(logo).toHaveAttribute('src', '/bestloongai-logo.svg')
-  }
+it('shows the internal development workspace with the official brand and required attribution', async () => {
+  renderHome()
   expect(
-    screen.queryByText('Powerful API Management Platform')
-  ).not.toBeInTheDocument()
+    await screen.findByRole('heading', {
+      level: 1,
+      name: 'AI Development Workspace',
+    })
+  ).toBeVisible()
+  expect(screen.getAllByAltText('国泰海通 GUOTAI HAITONG')[0]).toHaveAttribute(
+    'src',
+    '/gtht-logo.svg'
+  )
   expect(
     screen.getByRole('link', {
       name: 'Frontend design and development by New API contributors.',
     })
   ).toHaveAttribute('href', 'https://github.com/QuantumNous/new-api')
-  expect(screen.getByRole('button', { name: 'Get Started' })).toHaveAttribute(
-    'href',
-    '/sign-up'
-  )
-  expect(screen.getByRole('button', { name: 'View Pricing' })).toHaveAttribute(
-    'href',
-    '/pricing'
-  )
-  expect(screen.getByRole('button', { name: 'Docs' })).toHaveAttribute(
-    'href',
-    'https://docs.example.com'
-  )
+  expect(
+    screen.getByRole('button', { name: 'Sign in to workspace' })
+  ).toHaveAttribute('href', '/sign-in?redirect=%2Fdashboard')
+  expect(screen.queryByRole('link', { name: 'Docs' })).not.toBeInTheDocument()
   expect(screen.getByRole('link', { name: 'WorkBuddy' })).toHaveAttribute(
     'href',
     'https://www.codebuddy.cn/work/'
   )
 })
 
-it('hides documentation when no service documentation has been configured', async () => {
-  renderHero(false, '')
-  await screen.findByRole('heading', { level: 1 })
-  expect(screen.queryByRole('button', { name: 'Docs' })).not.toBeInTheDocument()
-})
-
-it('offers the dashboard to signed-in visitors on the branded homepage', async () => {
-  renderHero(true)
-
+it('offers signed-in staff a direct dashboard entry', async () => {
+  renderHome(true)
   expect(
     await screen.findByRole('button', { name: 'Go to Dashboard' })
   ).toHaveAttribute('href', '/dashboard')
-  expect(
-    screen.queryByRole('button', { name: 'Get Started' })
-  ).not.toBeInTheDocument()
 })
 
-it('describes enterprise token capabilities instead of illustrative deployment counts', () => {
-  render(<Stats />)
+it('switches configuration examples by tab and quick access, and copies the active example', async () => {
+  const user = userEvent.setup()
+  const writeText = vi
+    .spyOn(navigator.clipboard, 'writeText')
+    .mockResolvedValue()
+  renderHome()
+  const codex = await screen.findByRole('tab', { name: 'Codex' })
+  expect(codex).toHaveAttribute('aria-selected', 'true')
+  expect(screen.getByRole('tabpanel')).toHaveTextContent(
+    'https://gateway.example.com/team/v1'
+  )
 
-  expect(
-    screen.getAllByRole('heading').map((heading) => heading.textContent)
-  ).toEqual([
-    'Unified Token Access',
-    'Usage Visibility',
-    'Team Collaboration',
-    'Reliable Routing',
-  ])
-  expect(screen.queryByText(/^(50|100|10)\+$/)).not.toBeInTheDocument()
+  codex.focus()
+  await user.keyboard('{ArrowRight}')
+  await user.keyboard('{Enter}')
+  expect(screen.getByRole('tab', { name: 'Claude Code' })).toHaveAttribute(
+    'aria-selected',
+    'true'
+  )
+  expect(screen.getByRole('tabpanel')).toHaveTextContent('ANTHROPIC_BASE_URL')
+  expect(screen.getByRole('tabpanel')).toHaveTextContent(
+    'https://gateway.example.com/team'
+  )
+  await user.click(screen.getByRole('link', { name: /Agent integration/ }))
+  const panel = screen.getByRole('tabpanel')
+  expect(panel).toHaveTextContent('client.responses.create')
+  await user.click(
+    within(panel).getByRole('button', { name: 'Copy configuration' })
+  )
+  expect(writeText).toHaveBeenCalledWith(
+    expect.stringContaining('api_key=os.environ["OPENAI_API_KEY"]')
+  )
+  expect(within(panel).getByRole('button', { name: 'Copied' })).toBeVisible()
+})
+
+it.each([
+  'not a url',
+  'javascript:alert(1)',
+  'https://secret:password@gateway.example.com',
+  'http://localhost:3000',
+])(
+  'uses the current deployment instead of an unusable configured endpoint: %s',
+  async (address) => {
+    renderHome(false, address)
+    await screen.findByRole('tabpanel')
+    expect(screen.getByRole('tabpanel')).toHaveTextContent(
+      `${window.location.origin}/v1`
+    )
+    expect(screen.getByRole('tabpanel')).not.toHaveTextContent(
+      'secret:password'
+    )
+  }
+)
+
+it('migrates the previous site brand and preserves explicit custom branding', () => {
+  expect(resolveSystemBrand('BestLoongAI', '/bestloongai-logo.svg')).toEqual({
+    systemName: DEFAULT_SYSTEM_NAME,
+    logo: '/gtht-favicon.ico',
+  })
+  expect(resolveSystemBrand('Team console', '/team.svg')).toEqual({
+    systemName: 'Team console',
+    logo: '/team.svg',
+  })
+})
+
+it('quotes configured endpoint paths as shell literals in the HTTP example', async () => {
+  const user = userEvent.setup()
+  renderHome(false, 'https://gateway.example.com/proxy/$(whoami)/v1/')
+  await user.click(await screen.findByRole('tab', { name: 'HTTP API' }))
+  expect(screen.getByRole('tabpanel')).toHaveTextContent(
+    "curl 'https://gateway.example.com/proxy/$(whoami)/v1/chat/completions'"
+  )
 })

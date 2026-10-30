@@ -48,13 +48,13 @@ function EmptyAboutState() {
         <div className='space-y-2'>
           <h1 className='text-3xl font-bold'>{systemName}</h1>
           <p className='text-muted-foreground'>
-            {t('Reliable token services for enterprise customers')}
+            {t('AI Development Workspace')}
           </p>
         </div>
         <div className='space-y-4 text-sm'>
           <p className='text-muted-foreground'>
             {t(
-              'Centralized token access, usage visibility, and team controls for enterprise AI workloads.'
+              'A shared entry point for coding assistants, agent workflows, and model APIs.'
             )}
           </p>
           <p className='text-muted-foreground'>

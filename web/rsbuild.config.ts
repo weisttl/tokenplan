@@ -64,7 +64,7 @@ export default defineConfig(({ envMode }) => {
     },
     html: {
       template: './index.html',
-      favicon: './public/bestloongai-logo.svg',
+      favicon: './public/gtht-favicon.ico',
     },
     server: {
       host: '0.0.0.0',

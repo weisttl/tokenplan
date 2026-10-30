@@ -36,6 +36,7 @@ interface FooterColumnProps {
 }
 
 interface FooterProps {
+  compact?: boolean
   logo?: string
   name?: string
   columns?: FooterColumnProps[]
@@ -225,7 +226,12 @@ export function Footer(props: FooterProps) {
     <footer
       className={cn('border-border/40 relative z-10 border-t', props.className)}
     >
-      <div className='mx-auto max-w-6xl px-6 py-12 md:py-16'>
+      <div
+        className={cn(
+          'mx-auto max-w-6xl px-6',
+          props.compact ? 'py-6' : 'py-12 md:py-16'
+        )}
+      >
         <div className='flex flex-col justify-between gap-10 md:flex-row md:gap-16'>
           {/* Brand column */}
           <div className='shrink-0'>
@@ -264,7 +270,12 @@ export function Footer(props: FooterProps) {
 
         {/* Copyright + optional legal links inline on the left, project
             attribution on the right; wraps on narrow screens. */}
-        <div className='border-border/30 mt-12 flex flex-col items-center justify-between gap-x-3 gap-y-2 border-t pt-6 sm:flex-row'>
+        <div
+          className={cn(
+            'border-border/30 flex flex-col items-center justify-between gap-x-3 gap-y-2 border-t pt-6 sm:flex-row',
+            props.compact ? 'mt-6' : 'mt-12'
+          )}
+        >
           <div className='text-muted-foreground/40 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs sm:justify-start'>
             <span>
               &copy; {currentYear} {displayName}.{' '}

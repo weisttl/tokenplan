@@ -9,6 +9,7 @@ import { render, screen } from '@testing-library/react'
 import { afterEach, expect, it } from 'vitest'
 
 import { ThemeProvider } from '@/context/theme-provider'
+import { DEFAULT_SYSTEM_NAME } from '@/lib/constants'
 import { STATUS_QUERY_KEY } from '@/lib/status-query'
 
 import { About } from '../index'
@@ -39,11 +40,9 @@ function renderAbout(content: string) {
 it('shows the enterprise service and required upstream attribution when about content is empty', async () => {
   renderAbout('')
   expect(
-    await screen.findByRole('heading', { level: 1, name: 'BestLoongAI' })
+    await screen.findByRole('heading', { level: 1, name: DEFAULT_SYSTEM_NAME })
   ).toBeVisible()
-  expect(
-    screen.getByText('Reliable token services for enterprise customers')
-  ).toBeVisible()
+  expect(screen.getByText('AI Development Workspace')).toBeVisible()
   expect(screen.queryByText('No About Content Set')).not.toBeInTheDocument()
   expect(
     screen.getByRole('link', {
@@ -58,6 +57,6 @@ it('preserves administrator-supplied markdown instead of replacing it with defau
     await screen.findByRole('heading', { name: 'Company information' })
   ).toBeVisible()
   expect(
-    screen.queryByRole('heading', { name: 'BestLoongAI' })
+    screen.queryByRole('heading', { name: DEFAULT_SYSTEM_NAME })
   ).not.toBeInTheDocument()
 })
