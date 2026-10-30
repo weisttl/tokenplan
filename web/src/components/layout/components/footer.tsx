@@ -161,33 +161,16 @@ export function Footer(props: FooterProps) {
         title: t('footer.columns.about.title'),
         links: [
           {
-            text: t('footer.columns.about.links.aboutProject'),
-            href: 'https://docs.newapi.pro/wiki/project-introduction/',
+            text: t('About'),
+            href: '/about',
           },
           {
-            text: t('footer.columns.about.links.contact'),
-            href: 'https://docs.newapi.pro/support/community-interaction/',
+            text: t('Model Square'),
+            href: '/pricing',
           },
           {
-            text: t('footer.columns.about.links.features'),
-            href: 'https://docs.newapi.pro/wiki/features-introduction/',
-          },
-        ],
-      },
-      {
-        title: t('footer.columns.docs.title'),
-        links: [
-          {
-            text: t('footer.columns.docs.links.quickStart'),
-            href: 'https://docs.newapi.pro/getting-started/',
-          },
-          {
-            text: t('footer.columns.docs.links.installation'),
-            href: 'https://docs.newapi.pro/installation/',
-          },
-          {
-            text: t('footer.columns.docs.links.apiDocs'),
-            href: 'https://docs.newapi.pro/api/',
+            text: t('Console'),
+            href: '/dashboard',
           },
         ],
       },
@@ -195,16 +178,16 @@ export function Footer(props: FooterProps) {
         title: t('footer.columns.related.title'),
         links: [
           {
-            text: t('footer.columns.related.links.oneApi'),
-            href: 'https://github.com/songquanpeng/one-api',
+            text: 'Cherry Studio',
+            href: 'https://www.cherry-ai.com/',
           },
           {
-            text: t('footer.columns.related.links.midjourney'),
-            href: 'https://github.com/novicezk/midjourney-proxy',
+            text: 'CC Switch',
+            href: 'https://github.com/farion1231/cc-switch',
           },
           {
-            text: t('footer.columns.related.links.newApiKeyTool'),
-            href: 'https://github.com/Calcium-Ion/new-api-key-tool',
+            text: 'WorkBuddy',
+            href: 'https://www.codebuddy.cn/work/',
           },
         ],
       },

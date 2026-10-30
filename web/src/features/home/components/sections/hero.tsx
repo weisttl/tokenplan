@@ -34,10 +34,10 @@ interface HeroProps {
 export function Hero(props: HeroProps) {
   const { t } = useTranslation()
   const { status } = useStatus()
-  const docsUrl =
-    (status?.docs_link as string | undefined) || 'https://docs.newapi.pro'
+  const docsUrl = (status?.docs_link as string | undefined)?.trim()
 
   const renderDocsButton = () => {
+    if (!docsUrl) return null
     const isExternal = docsUrl.startsWith('http')
     if (isExternal) {
       return (

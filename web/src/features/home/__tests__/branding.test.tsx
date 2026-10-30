@@ -21,13 +21,16 @@ afterEach(() => {
   clients.length = 0
 })
 
-function renderHero(isAuthenticated: boolean) {
+function renderHero(
+  isAuthenticated: boolean,
+  docsLink = 'https://docs.example.com'
+) {
   const client = new QueryClient({
     defaultOptions: { queries: { staleTime: Infinity } },
   })
   clients.push(client)
   client.setQueryData(STATUS_QUERY_KEY, {
-    docs_link: 'https://docs.newapi.pro',
+    docs_link: docsLink,
   })
   const route = createRootRoute({
     component: () => (
@@ -75,12 +78,18 @@ it('uses BestLoongAI branding and preserves the required legal notice and origin
   )
   expect(screen.getByRole('button', { name: 'Docs' })).toHaveAttribute(
     'href',
-    'https://docs.newapi.pro'
+    'https://docs.example.com'
   )
   expect(screen.getByRole('link', { name: 'WorkBuddy' })).toHaveAttribute(
     'href',
     'https://www.codebuddy.cn/work/'
   )
+})
+
+it('hides documentation when no service documentation has been configured', async () => {
+  renderHero(false, '')
+  await screen.findByRole('heading', { level: 1 })
+  expect(screen.queryByRole('button', { name: 'Docs' })).not.toBeInTheDocument()
 })
 
 it('offers the dashboard to signed-in visitors on the branded homepage', async () => {
