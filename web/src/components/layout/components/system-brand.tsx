@@ -26,8 +26,10 @@ import {
 } from '@/components/ui/sidebar'
 import { useStatus } from '@/hooks/use-status'
 import { useSystemConfig } from '@/hooks/use-system-config'
-import { DEFAULT_SYSTEM_NAME } from '@/lib/constants'
+import { DEFAULT_LOGO, DEFAULT_SYSTEM_NAME } from '@/lib/constants'
 import { cn } from '@/lib/utils'
+
+import { GuotaiHaitongLogo } from './guotai-haitong-logo'
 
 type SystemBrandProps = {
   defaultName?: string
@@ -55,6 +57,19 @@ export function SystemBrand(props: SystemBrandProps) {
   const name = systemName || props.defaultName || DEFAULT_SYSTEM_NAME
   const version =
     status?.version || props.defaultVersion || t('Unknown version')
+
+  if (variant === 'inline' && logo === DEFAULT_LOGO) {
+    return (
+      <Link
+        to='/'
+        aria-label={t('Go to home')}
+        title={name}
+        className='hover:bg-accent focus-visible:ring-ring/40 inline-flex h-7 max-w-[164px] min-w-0 items-center rounded-md px-1.5 outline-none focus-visible:ring-2'
+      >
+        <GuotaiHaitongLogo className='h-6 w-[128px] max-w-full sm:w-[164px]' />
+      </Link>
+    )
+  }
 
   if (variant === 'inline') {
     return (

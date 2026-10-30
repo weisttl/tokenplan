@@ -27,7 +27,6 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTheme } from '@/context/theme-provider'
 import { SystemUpdateAction } from '@/features/system-update/system-update-action'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useSystemConfig } from '@/hooks/use-system-config'
@@ -37,6 +36,7 @@ import { useAuthStore } from '@/stores/auth-store'
 
 import { defaultTopNavLinks } from '../config/top-nav.config'
 import type { TopNavLink } from '../types'
+import { GuotaiHaitongLogo } from './guotai-haitong-logo'
 import { HeaderLogo } from './header-logo'
 
 const AUTH_PROMPT_SECONDS = 5
@@ -102,7 +102,6 @@ export function PublicHeader(props: PublicHeaderProps) {
   const links =
     props.navLinks ?? (dynamicLinks.length > 0 ? dynamicLinks : navLinks)
   const isWorkspace = props.variant === 'workspace'
-  const { resolvedTheme } = useTheme()
 
   let logoContent: ReactNode = (
     <HeaderLogo
@@ -114,17 +113,7 @@ export function PublicHeader(props: PublicHeaderProps) {
   )
   if (customLogo) logoContent = customLogo
   if (isWorkspace && !customLogo) {
-    logoContent = (
-      <img
-        src={
-          resolvedTheme === 'dark' ? '/gtht-logo-white.svg' : '/gtht-logo.svg'
-        }
-        alt='国泰海通 GUOTAI HAITONG'
-        width={219}
-        height={32}
-        className='h-full w-full object-contain'
-      />
-    )
+    logoContent = <GuotaiHaitongLogo className='h-full w-full' />
   }
   if (loading && !isWorkspace) {
     logoContent = <Skeleton className='size-full rounded-lg' />
