@@ -29,22 +29,22 @@ export function HowItWorks() {
       num: '1',
       title: t('Configure'),
       desc: t(
-        'Add your API keys, set up channels and configure access permissions'
+        'Create an account and issue tokens for your enterprise applications.'
       ),
       icon: <Settings className='size-6' strokeWidth={1.5} />,
     },
     {
       num: '2',
       title: t('Connect'),
-      desc: t(
-        'Connect through OpenAI, Claude, Gemini, and other compatible API routes'
-      ),
+      desc: t('Set your API endpoint and token in your applications or SDKs.'),
       icon: <Zap className='size-6' strokeWidth={1.5} />,
     },
     {
       num: '3',
       title: t('Monitor'),
-      desc: t('Track usage, costs and performance with real-time analytics'),
+      desc: t(
+        'Monitor token usage, review request logs, and manage team access.'
+      ),
       icon: <BarChart3 className='size-6' strokeWidth={1.5} />,
     },
   ]
@@ -54,10 +54,10 @@ export function HowItWorks() {
       <div className='mx-auto max-w-6xl'>
         <AnimateInView className='mb-16 text-center md:mb-20'>
           <p className='text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase'>
-            {t('How It Works')}
+            {t('Enterprise Onboarding')}
           </p>
-          <h2 className='text-2xl font-bold tracking-tight md:text-3xl'>
-            {t('Three steps to get started')}
+          <h2 className='text-2xl font-bold tracking-normal md:text-3xl'>
+            {t('Connect your enterprise in three steps')}
           </h2>
         </AnimateInView>
 

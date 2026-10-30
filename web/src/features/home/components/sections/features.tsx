@@ -41,19 +41,19 @@ export function Features(_props: FeaturesProps) {
     {
       id: 'fast',
       num: '01',
-      title: t('Lightning Fast'),
+      title: t('Unified Token Access'),
       desc: t(
-        'Optimized network architecture ensures millisecond response times'
+        'Connect enterprise applications to configured AI models through one API.'
       ),
       span: 'md:col-span-2',
-      icon: <Zap className='size-4 text-blue-400' />,
+      icon: <Zap className='text-primary size-4' />,
       visual: (
         <div className='mt-4 grid grid-cols-3 gap-2'>
           {['OpenAI', 'Claude', 'Gemini', 'DeepSeek', 'Qwen', 'Llama'].map(
             (name) => (
               <div
                 key={name}
-                className='border-border/30 bg-muted/20 text-muted-foreground flex items-center justify-center rounded-lg border px-3 py-2 text-xs transition-colors duration-300 hover:border-blue-500/30 hover:bg-blue-500/5'
+                className='border-border/30 bg-muted/20 text-muted-foreground hover:border-primary/30 hover:bg-primary/5 flex items-center justify-center rounded-lg border px-3 py-2 text-xs transition-colors duration-300'
               >
                 {name}
               </div>
@@ -67,7 +67,7 @@ export function Features(_props: FeaturesProps) {
       num: '02',
       title: t('Secure & Reliable'),
       desc: t(
-        'Enterprise-grade security with comprehensive permission management'
+        'Control token access with roles, quotas, and per-key permissions.'
       ),
       span: 'md:col-span-1',
       icon: <Shield className='size-4 text-emerald-400' />,
@@ -102,10 +102,10 @@ export function Features(_props: FeaturesProps) {
     {
       id: 'global',
       num: '03',
-      title: t('Global Coverage'),
-      desc: t('Multi-region deployment for stable global access'),
+      title: t('Reliable Routing'),
+      desc: t('Route enterprise requests with load balancing and rate limits.'),
       span: 'md:col-span-1',
-      icon: <Globe className='size-4 text-violet-400' />,
+      icon: <Globe className='size-4 text-amber-500' />,
       visual: (
         <div className='mt-4 space-y-2'>
           {[t('Load Balancing'), t('Rate Limiting'), t('Cost Tracking')].map(
@@ -114,7 +114,7 @@ export function Features(_props: FeaturesProps) {
                 <div
                   className={`flex size-6 items-center justify-center rounded-full text-[10px] font-bold ${
                     i === 1
-                      ? 'border border-blue-500/30 bg-blue-500/20 text-blue-500'
+                      ? 'border-primary/30 bg-primary/10 text-primary border'
                       : 'border-border/40 bg-muted text-muted-foreground border'
                   }`}
                 >
@@ -131,8 +131,10 @@ export function Features(_props: FeaturesProps) {
     {
       id: 'developer',
       num: '04',
-      title: t('Developer Friendly'),
-      desc: t('Compatible API routes for common AI application workflows'),
+      title: t('Enterprise Integration'),
+      desc: t(
+        'Use compatible APIs and SDKs to integrate token services into existing systems.'
+      ),
       span: 'md:col-span-2',
       icon: <Code className='size-4 text-amber-400' />,
       visual: (
@@ -148,7 +150,7 @@ export function Features(_props: FeaturesProps) {
             ))}
           </div>
           <div className='text-muted-foreground flex items-center gap-1.5 text-xs'>
-            <Code className='size-3.5 text-blue-500' />
+            <Code className='text-primary size-3.5' />
             {t('Multi-protocol Compatible')}
           </div>
         </div>
@@ -160,22 +162,26 @@ export function Features(_props: FeaturesProps) {
     {
       icon: <Gauge className='size-5' strokeWidth={1.5} />,
       title: t('High Performance'),
-      desc: t('Support for high concurrency with automatic load balancing'),
+      desc: t(
+        'Distribute enterprise workloads across available upstream channels.'
+      ),
     },
     {
       icon: <DollarSign className='size-5' strokeWidth={1.5} />,
       title: t('Transparent Billing'),
-      desc: t('Pay-as-you-go with real-time usage monitoring'),
+      desc: t('Track token usage and spending in one place.'),
     },
     {
       icon: <Users className='size-5' strokeWidth={1.5} />,
       title: t('Team Collaboration'),
-      desc: t('Multi-user management with flexible permission allocation'),
+      desc: t('Manage team access with clear roles and token permissions.'),
     },
     {
       icon: <HeartHandshake className='size-5' strokeWidth={1.5} />,
-      title: t('Open Source'),
-      desc: t('Community driven, self-hosted, and extensible'),
+      title: t('Usage Visibility'),
+      desc: t(
+        'Review request logs to investigate token usage and service issues.'
+      ),
     },
   ]
 
@@ -186,10 +192,8 @@ export function Features(_props: FeaturesProps) {
           <p className='text-muted-foreground mb-3 text-xs font-medium tracking-widest uppercase'>
             {t('Core Features')}
           </p>
-          <h2 className='text-2xl leading-tight font-bold tracking-tight md:text-3xl'>
-            {t('Built for developers,')}
-            <br />
-            {t('designed for scale')}
+          <h2 className='text-2xl leading-tight font-bold tracking-normal md:text-3xl'>
+            {t('Reliable token services for enterprise customers')}
           </h2>
         </AnimateInView>
 
