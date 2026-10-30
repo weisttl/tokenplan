@@ -5,15 +5,17 @@ import {
   createRouter,
   RouterProvider,
 } from '@tanstack/react-router'
-import { render, screen, within } from '@testing-library/react'
+import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, expect, it, vi } from 'vitest'
 
 import { ThemeProvider } from '@/context/theme-provider'
+import { api } from '@/lib/api'
 import { DEFAULT_SYSTEM_NAME, resolveSystemBrand } from '@/lib/constants'
 import { STATUS_QUERY_KEY } from '@/lib/status-query'
 
 import { InternalHome } from '../components/internal-home'
+import { Home } from '../index'
 
 const clients: QueryClient[] = []
 afterEach(() => {
@@ -23,7 +25,8 @@ afterEach(() => {
 
 function renderHome(
   isAuthenticated = false,
-  serverAddress = 'https://gateway.example.com/team/'
+  serverAddress = 'https://gateway.example.com/team/',
+  includeLoadingState = false
 ) {
   const client = new QueryClient({
     defaultOptions: { queries: { staleTime: Infinity } },
@@ -34,7 +37,12 @@ function renderHome(
     docs_link: '',
   })
   const root = createRootRoute({
-    component: () => <InternalHome isAuthenticated={isAuthenticated} />,
+    component: () =>
+      includeLoadingState ? (
+        <Home />
+      ) : (
+        <InternalHome isAuthenticated={isAuthenticated} />
+      ),
   })
   const router = createRouter({
     routeTree: root,
@@ -48,6 +56,30 @@ function renderHome(
     </QueryClientProvider>
   )
 }
+
+it('keeps the high-resolution logo throughout the initial homepage request', async () => {
+  let finishRequest!: () => void
+  const pending = new Promise<void>((resolve) => {
+    finishRequest = resolve
+  })
+  vi.spyOn(api, 'get').mockImplementation(async () => {
+    await pending
+    return { data: { success: true, data: '' } } as Awaited<
+      ReturnType<typeof api.get>
+    >
+  })
+  renderHome(false, 'https://gateway.example.com', true)
+  await screen.findByText('Loading...')
+  expect(
+    screen.getByRole('img', { name: '国泰海通 GUOTAI HAITONG' })
+  ).toHaveAttribute('src', '/gtht-logo.svg')
+  await act(async () => finishRequest())
+  await screen.findByRole('heading', { name: 'Token plan', level: 1 })
+  expect(screen.getAllByRole('img')).toHaveLength(1)
+  expect(
+    screen.getByRole('img', { name: '国泰海通 GUOTAI HAITONG' })
+  ).toHaveAttribute('src', '/gtht-logo.svg')
+})
 
 it('shows the internal development workspace with the official brand and required attribution', async () => {
   renderHome()

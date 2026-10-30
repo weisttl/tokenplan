@@ -59,7 +59,10 @@ export function Home() {
 
   if (!isLoaded) {
     return (
-      <PublicLayout showMainContainer={false}>
+      <PublicLayout
+        showMainContainer={false}
+        headerProps={{ variant: 'workspace' }}
+      >
         <main className='flex min-h-screen items-center justify-center'>
           <div className='text-muted-foreground'>{t('Loading...')}</div>
         </main>
