@@ -12,7 +12,7 @@ import (
 
 var StartTime = time.Now().Unix() // unit: second
 var Version = "v0.0.0"            // this hard coding will be replaced automatically when building, no need to manually change
-var SystemName = "国泰海通 · AI 开发平台"
+var SystemName = "国泰海通 · Token plan"
 var Footer = ""
 var Logo = "/gtht-favicon.ico"
 var TopUpLink = ""

@@ -91,20 +91,6 @@ export function InternalHome(props: { isAuthenticated: boolean }) {
         <section className='bg-background border-b'>
           <div className='mx-auto flex max-w-7xl flex-col justify-between gap-6 px-6 py-8 sm:flex-row sm:items-end lg:px-8 lg:py-10'>
             <div className='min-w-0'>
-              <img
-                src='/gtht-logo.svg'
-                alt='国泰海通 GUOTAI HAITONG'
-                width={219}
-                height={32}
-                className='mb-6 h-8 w-[219px] object-contain dark:hidden'
-              />
-              <img
-                src='/gtht-logo-white.svg'
-                alt='国泰海通 GUOTAI HAITONG'
-                width={219}
-                height={32}
-                className='mb-6 hidden h-8 w-[219px] object-contain dark:block'
-              />
               <div className='text-muted-foreground mb-3 flex flex-wrap items-center gap-2 text-xs'>
                 <span className='h-3 w-0.5 bg-[#dfbd88]' aria-hidden='true' />
                 <span>{t('Internal workspace')}</span>
@@ -112,7 +98,7 @@ export function InternalHome(props: { isAuthenticated: boolean }) {
                 <span>Coding & AI Agents</span>
               </div>
               <h1 className='text-3xl leading-tight font-semibold sm:text-4xl'>
-                {t('AI Development Workspace')}
+                Token plan
               </h1>
               <p className='text-muted-foreground mt-3 max-w-2xl text-sm leading-6'>
                 {t(

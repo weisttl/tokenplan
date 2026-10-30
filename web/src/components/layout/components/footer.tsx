@@ -232,48 +232,50 @@ export function Footer(props: FooterProps) {
           props.compact ? 'py-6' : 'py-12 md:py-16'
         )}
       >
-        <div className='flex flex-col justify-between gap-10 md:flex-row md:gap-16'>
-          {/* Brand column */}
-          <div className='shrink-0'>
-            <Link to='/' className='group flex items-center gap-2.5'>
-              <img
-                src={displayLogo}
-                alt={displayName}
-                className='size-7 rounded-lg object-contain'
-              />
-              <span className='text-sm font-semibold tracking-tight'>
-                {displayName}
-              </span>
-            </Link>
-          </div>
-
-          {/* Links columns */}
-          {isDemoSiteMode && (
-            <div className='grid grid-cols-3 gap-8 md:gap-16'>
-              {displayColumns.map((column) => (
-                <div key={column.title}>
-                  <p className='text-muted-foreground/50 mb-3 text-xs font-medium tracking-wider uppercase'>
-                    {t(column.title)}
-                  </p>
-                  <ul className='space-y-2.5'>
-                    {column.links.map((link) => (
-                      <li key={link.href}>
-                        <FooterLinkItem link={link} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
+        {!props.compact && (
+          <div className='flex flex-col justify-between gap-10 md:flex-row md:gap-16'>
+            {/* Brand column */}
+            <div className='shrink-0'>
+              <Link to='/' className='group flex items-center gap-2.5'>
+                <img
+                  src={displayLogo}
+                  alt={displayName}
+                  className='size-7 rounded-lg object-contain'
+                />
+                <span className='text-sm font-semibold tracking-tight'>
+                  {displayName}
+                </span>
+              </Link>
             </div>
-          )}
-        </div>
+
+            {/* Links columns */}
+            {isDemoSiteMode && (
+              <div className='grid grid-cols-3 gap-8 md:gap-16'>
+                {displayColumns.map((column) => (
+                  <div key={column.title}>
+                    <p className='text-muted-foreground/50 mb-3 text-xs font-medium tracking-wider uppercase'>
+                      {t(column.title)}
+                    </p>
+                    <ul className='space-y-2.5'>
+                      {column.links.map((link) => (
+                        <li key={link.href}>
+                          <FooterLinkItem link={link} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Copyright + optional legal links inline on the left, project
             attribution on the right; wraps on narrow screens. */}
         <div
           className={cn(
             'border-border/30 flex flex-col items-center justify-between gap-x-3 gap-y-2 border-t pt-6 sm:flex-row',
-            props.compact ? 'mt-6' : 'mt-12'
+            props.compact ? 'border-t-0 pt-0' : 'mt-12'
           )}
         >
           <div className='text-muted-foreground/40 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs sm:justify-start'>

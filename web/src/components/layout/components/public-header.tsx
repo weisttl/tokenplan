@@ -27,6 +27,7 @@ import { ProfileDropdown } from '@/components/profile-dropdown'
 import { ThemeSwitch } from '@/components/theme-switch'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { useTheme } from '@/context/theme-provider'
 import { SystemUpdateAction } from '@/features/system-update/system-update-action'
 import { useNotifications } from '@/hooks/use-notifications'
 import { useSystemConfig } from '@/hooks/use-system-config'
@@ -101,6 +102,7 @@ export function PublicHeader(props: PublicHeaderProps) {
   const links =
     props.navLinks ?? (dynamicLinks.length > 0 ? dynamicLinks : navLinks)
   const isWorkspace = props.variant === 'workspace'
+  const { resolvedTheme } = useTheme()
 
   let logoContent: ReactNode = (
     <HeaderLogo
@@ -111,7 +113,22 @@ export function PublicHeader(props: PublicHeaderProps) {
     />
   )
   if (customLogo) logoContent = customLogo
-  if (loading) logoContent = <Skeleton className='size-full rounded-lg' />
+  if (isWorkspace && !customLogo) {
+    logoContent = (
+      <img
+        src={
+          resolvedTheme === 'dark' ? '/gtht-logo-white.svg' : '/gtht-logo.svg'
+        }
+        alt='国泰海通 GUOTAI HAITONG'
+        width={219}
+        height={32}
+        className='h-full w-full object-contain'
+      />
+    )
+  }
+  if (loading && !isWorkspace) {
+    logoContent = <Skeleton className='size-full rounded-lg' />
+  }
 
   let authContent = (
     <Button
@@ -231,19 +248,28 @@ export function PublicHeader(props: PublicHeaderProps) {
                 to={homeUrl}
                 className='group flex min-w-0 items-center gap-2.5'
               >
-                <div className='flex size-7 shrink-0 items-center justify-center transition-all duration-300 group-hover:scale-105'>
+                <div
+                  className={cn(
+                    'flex shrink-0 items-center justify-center',
+                    isWorkspace
+                      ? 'h-8 w-[184px] sm:w-[219px]'
+                      : 'size-7 transition-all duration-300 group-hover:scale-105'
+                  )}
+                >
                   {logoContent}
                 </div>
-                <span
-                  className='max-w-48 truncate text-sm font-semibold tracking-tight'
-                  title={displaySiteName}
-                >
-                  {loading ? (
-                    <Skeleton className='h-4 w-16' />
-                  ) : (
-                    displaySiteName
-                  )}
-                </span>
+                {!isWorkspace && (
+                  <span
+                    className='max-w-48 truncate text-sm font-semibold tracking-tight'
+                    title={displaySiteName}
+                  >
+                    {loading ? (
+                      <Skeleton className='h-4 w-16' />
+                    ) : (
+                      displaySiteName
+                    )}
+                  </span>
+                )}
               </Link>
               <SystemUpdateAction presentation='version' />
             </div>

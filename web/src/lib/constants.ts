@@ -21,13 +21,15 @@ For commercial licensing, please contact support@quantumnous.com
  */
 
 // System Configuration Defaults
-export const DEFAULT_SYSTEM_NAME = '国泰海通 · AI 开发平台'
+export const DEFAULT_SYSTEM_NAME = '国泰海通 · Token plan'
 export const DEFAULT_LOGO = '/gtht-favicon.ico'
 
 export function resolveSystemBrand(name?: unknown, logo?: unknown) {
   return {
     systemName:
-      typeof name === 'string' && name.trim() && name !== 'BestLoongAI'
+      typeof name === 'string' &&
+      name.trim() &&
+      !['BestLoongAI', '国泰海通 · AI 开发平台'].includes(name)
         ? name
         : DEFAULT_SYSTEM_NAME,
     logo:

@@ -42,7 +42,7 @@ it('shows the enterprise service and required upstream attribution when about co
   expect(
     await screen.findByRole('heading', { level: 1, name: DEFAULT_SYSTEM_NAME })
   ).toBeVisible()
-  expect(screen.getByText('AI Development Workspace')).toBeVisible()
+  expect(screen.getByText('Token plan')).toBeVisible()
   expect(screen.queryByText('No About Content Set')).not.toBeInTheDocument()
   expect(
     screen.getByRole('link', {

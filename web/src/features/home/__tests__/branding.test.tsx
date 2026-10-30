@@ -54,10 +54,11 @@ it('shows the internal development workspace with the official brand and require
   expect(
     await screen.findByRole('heading', {
       level: 1,
-      name: 'AI Development Workspace',
+      name: 'Token plan',
     })
   ).toBeVisible()
-  expect(screen.getAllByAltText('国泰海通 GUOTAI HAITONG')[0]).toHaveAttribute(
+  expect(screen.getAllByRole('img')).toHaveLength(1)
+  expect(screen.getByAltText('国泰海通 GUOTAI HAITONG')).toHaveAttribute(
     'src',
     '/gtht-logo.svg'
   )
