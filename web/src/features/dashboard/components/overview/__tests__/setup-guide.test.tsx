@@ -107,6 +107,23 @@ async function renderOverview() {
 }
 
 describe('overview setup guide', () => {
+  it('keeps internal setup focused on keys and requests without commercial entry points', async () => {
+    useAuthStore
+      .getState()
+      .auth.setUser({ id: 1, username: 'internal-user', role: 1 })
+    await renderOverview()
+
+    expect(
+      await screen.findByRole('button', { name: /^Create API Key/ })
+    ).toBeVisible()
+    expect(screen.getByText('Send a request')).toBeVisible()
+    expect(screen.queryByText('Add credits')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('link', { name: 'Wallet' })
+    ).not.toBeInTheDocument()
+    expect(document.querySelector('a[href="/wallet"]')).not.toBeInTheDocument()
+  })
+
   it('shows usage first and only a header entry when setup is complete', async () => {
     await renderOverview()
 
@@ -116,7 +133,7 @@ describe('overview setup guide', () => {
       screen.getAllByRole('heading').map((heading) => heading.textContent)
     ).toEqual(['Overview', 'Usage at a glance'])
     expect(screen.queryByText('Setup guide complete')).not.toBeInTheDocument()
-    expect(screen.queryByText('Setup progress: 3/3')).not.toBeInTheDocument()
+    expect(screen.queryByText('Setup progress: 2/2')).not.toBeInTheDocument()
     for (const name of ['API Keys', 'Channels', 'Usage Logs', 'Pricing']) {
       expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
     }
@@ -187,7 +204,7 @@ describe('overview setup guide', () => {
     await user.click(
       await screen.findByRole('button', { name: 'Hide setup guide' })
     )
-    expect(screen.getByText('Setup progress: 1/3')).toBeVisible()
+    expect(screen.getByText('Setup progress: 1/2')).toBeVisible()
     expect(
       screen.getByText('Setup guide is collapsed. Expand it anytime.')
     ).toBeVisible()
@@ -210,7 +227,7 @@ describe('overview setup guide', () => {
     })
     window.localStorage.setItem(storageKey, 'collapsed')
     await renderOverview()
-    expect(await screen.findByText('Setup progress: 2/3')).toBeVisible()
+    expect(await screen.findByText('Setup progress: 1/2')).toBeVisible()
 
     act(() => {
       useAuthStore.getState().auth.setUser({

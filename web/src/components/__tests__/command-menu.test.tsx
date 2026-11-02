@@ -35,7 +35,7 @@ import { useAuthStore } from '@/stores/auth-store'
 import { CommandMenu } from '../command-menu'
 import { Search } from '../search'
 
-const adminEntries = ['Channels', 'Models', 'Users', 'Redemption Codes']
+const adminEntries = ['Channels', 'Models', 'Users']
 const superAdminEntries = ['System Info', 'Task Plugins', 'System Settings']
 
 // jsdom lacks the Web Animations API the menu's scroll area waits on.
@@ -103,8 +103,9 @@ test('regular users only find their own console pages in search', async () => {
   const entries = await searchEntriesFor(ROLE.USER)
 
   expect(entries).toEqual(
-    expect.arrayContaining(['API Keys', 'Usage Logs', 'Wallet', 'Profile'])
+    expect.arrayContaining(['API Keys', 'Usage Logs', 'Profile'])
   )
+  expect(entries).not.toContain('Wallet')
   for (const entry of [...adminEntries, ...superAdminEntries]) {
     expect(entries).not.toContain(entry)
   }
@@ -114,6 +115,9 @@ test('admins find admin pages in search but not super admin pages', async () => 
   const entries = await searchEntriesFor(ROLE.ADMIN)
 
   expect(entries).toEqual(expect.arrayContaining(adminEntries))
+  for (const entry of ['Wallet', 'Subscriptions', 'Redemption Codes']) {
+    expect(entries).not.toContain(entry)
+  }
   for (const entry of superAdminEntries) {
     expect(entries).not.toContain(entry)
   }
@@ -127,4 +131,15 @@ test('pages hidden in the sidebar settings stay out of search', async () => {
 
   expect(entries).not.toContain('Wallet')
   expect(entries).toContain('Profile')
+})
+
+test('commercial pages stay out of internal search even for super admins', async () => {
+  const entries = await searchEntriesFor(ROLE.SUPER_ADMIN)
+
+  expect(entries).toEqual(
+    expect.arrayContaining(['API Keys', 'Users', 'System Settings'])
+  )
+  for (const entry of ['Wallet', 'Subscriptions', 'Redemption Codes']) {
+    expect(entries).not.toContain(entry)
+  }
 })

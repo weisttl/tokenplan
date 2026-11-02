@@ -174,6 +174,10 @@ function isModuleEnabled(
   adminConfig: SidebarModulesAdminConfig,
   userConfig: SidebarModulesUserConfig
 ): boolean {
+  // Commercial self-service pages are not part of the internal workspace.
+  if (['/wallet', '/subscriptions', '/redemption-codes'].includes(url)) {
+    return false
+  }
   const mapping = URL_TO_CONFIG_MAP[url]
   if (!mapping) {
     // No mapping config, default to visible (e.g. system settings and new features)
