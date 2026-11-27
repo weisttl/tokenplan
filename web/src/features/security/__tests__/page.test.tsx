@@ -243,13 +243,20 @@ describe('security page migration', () => {
     )
   })
 
-  it('Profile retains preferences and no longer mounts security controls or requests', async () => {
+  it('Profile hides settings, sidebar customization and language preferences even when permitted', async () => {
+    useAuthStore
+      .getState()
+      .auth.setUser({ ...profile, permissions: { sidebar_settings: true } })
     await renderPage('/profile')
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: 'Save Settings' })
-      ).toBeVisible()
-    )
+    expect(await screen.findByText('Alice')).toBeVisible()
+    expect(screen.queryByText('Settings & Preferences')).not.toBeInTheDocument()
+    expect(
+      screen.queryByText('Sidebar Personal Settings')
+    ).not.toBeInTheDocument()
+    expect(screen.queryByText('Language Preferences')).not.toBeInTheDocument()
+    expect(
+      screen.queryByRole('button', { name: 'Save Settings' })
+    ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('button', { name: 'Change Password' })
     ).not.toBeInTheDocument()

@@ -22,7 +22,7 @@ import { CopyButton } from '@/components/copy-button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useStatus } from '@/hooks/use-status'
 
-export type IntegrationMode = 'codex' | 'claude' | 'agent' | 'http'
+export type IntegrationMode = 'http' | 'python'
 
 interface IntegrationWorkbenchProps {
   mode: IntegrationMode
@@ -56,46 +56,39 @@ export function IntegrationWorkbench(props: IntegrationWorkbenchProps) {
   const shellUrl = `'${`${baseUrl}/chat/completions`.replaceAll("'", "'\\''")}'`
   const examples = [
     {
-      id: 'codex',
-      label: 'Codex',
-      filename: '~/.codex/config.toml',
-      code: `model_provider = "gtht"\nmodel = "YOUR_MODEL_ID"\n\n[model_providers.gtht]\nname = "Guotai Haitong"\nbase_url = ${JSON.stringify(baseUrl)}\nwire_api = "responses"\nenv_key = "OPENAI_API_KEY"`,
-    },
-    {
-      id: 'claude',
-      label: 'Claude Code',
-      filename: '~/.claude/settings.json',
-      code: JSON.stringify(
-        {
-          env: {
-            ANTHROPIC_BASE_URL: baseUrl.slice(0, -3),
-            ANTHROPIC_AUTH_TOKEN: 'YOUR_API_TOKEN',
-            ANTHROPIC_MODEL: 'YOUR_MODEL_ID',
-          },
-        },
-        null,
-        2
-      ),
-    },
-    {
-      id: 'agent',
-      label: 'Agent SDK',
-      filename: 'agent.py',
-      code: `import os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    base_url=${JSON.stringify(baseUrl)},\n    api_key=os.environ["OPENAI_API_KEY"],\n)\n\nresponse = client.responses.create(\n    model="YOUR_MODEL_ID",\n    input="Review this change and suggest tests.",\n)\nprint(response.output_text)`,
-    },
-    {
       id: 'http',
       label: 'HTTP API',
       filename: 'terminal',
       code: `curl ${shellUrl} \\\n  -H "Authorization: Bearer $OPENAI_API_KEY" \\\n  -H "Content-Type: application/json" \\\n  -d '{\n    "model": "YOUR_MODEL_ID",\n    "messages": [{"role": "user", "content": "Hello"}]\n  }'`,
+    },
+    {
+      id: 'python',
+      label: 'Python',
+      filename: 'request.py',
+      code: `import os\nfrom openai import OpenAI\n\nclient = OpenAI(\n    base_url=${JSON.stringify(baseUrl)},\n    api_key=os.environ["OPENAI_API_KEY"],\n)\n\nresponse = client.chat.completions.create(\n    model="YOUR_MODEL_ID",\n    messages=[{"role": "user", "content": "Hello"}],\n)\nprint(response.choices[0].message.content)`,
     },
   ]
 
   return (
     <div
       id='integration'
-      className='bg-background scroll-mt-24 overflow-hidden rounded-lg border'
+      className='bg-background scroll-mt-24 overflow-hidden rounded-xl border'
     >
+      <div className='flex min-w-0 flex-wrap items-center justify-between gap-3 border-b p-4 sm:px-5'>
+        <div className='min-w-0 flex-1'>
+          <p className='text-muted-foreground mb-1 text-xs'>
+            {t('API endpoint')}
+          </p>
+          <code className='text-primary block text-sm break-all'>
+            {baseUrl}
+          </code>
+        </div>
+        <CopyButton
+          value={baseUrl}
+          tooltip={t('Copy API endpoint')}
+          variant='outline'
+        />
+      </div>
       <Tabs
         value={props.mode}
         onValueChange={(value) => props.onModeChange(value as IntegrationMode)}
@@ -105,7 +98,7 @@ export function IntegrationWorkbench(props: IntegrationWorkbenchProps) {
           <TabsList
             variant='line'
             aria-label={t('Integration workbench')}
-            className='mb-1 grid h-10 w-full grid-cols-4 gap-0 sm:w-auto'
+            className='mb-1 grid h-10 w-full grid-cols-2 gap-0 sm:w-auto'
           >
             {examples.map((example) => (
               <TabsTrigger
@@ -130,7 +123,7 @@ export function IntegrationWorkbench(props: IntegrationWorkbenchProps) {
                 className='size-8'
               />
             </div>
-            <pre className='text-foreground h-[360px] overflow-auto p-4 font-mono text-xs leading-6 sm:p-5 sm:text-sm'>
+            <pre className='text-foreground min-h-[300px] overflow-auto p-4 font-mono text-xs leading-6 sm:p-5 sm:text-sm'>
               <code>{example.code}</code>
             </pre>
           </TabsContent>
